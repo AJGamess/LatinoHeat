@@ -9,7 +9,7 @@ html {
 }
 
 img {
-    border: 5px solid black;
+    border: 2px solid black;
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
