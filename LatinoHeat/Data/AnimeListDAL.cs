@@ -5,29 +5,51 @@ namespace LatinoHeat.Data
 {
 	public class AnimeListDAL : IDataAccessLayer
 	{
-		public void CreateAnime(Anime anime)
+		AnimeDbContext _animeDbContext;
+
+		AnimeListDAL(AnimeDbContext animeDbContext)
 		{
-			throw new NotImplementedException();
+			this._animeDbContext = animeDbContext;
 		}
 
-		public IEnumerable<Anime> FilterAnime(string AnimeName)
+		public void CreateAnime(Anime anime)
 		{
-			throw new NotImplementedException();
+			_animeDbContext.Animes.Add(anime);
+			_animeDbContext.SaveChanges();
+		}
+
+		public IEnumerable<Anime> FilterAnime(string AnimeTitle)
+		{
+			if (AnimeTitle == null)
+				AnimeTitle = string.Empty;
+
+			if (AnimeTitle == "")
+				return GetAnime();
+
+			IEnumerable<Anime> GetFundraiserName = GetAnime().Where(m => (!string.IsNullOrEmpty(m.Title)
+			&& m.Title.ToLower().Contains(AnimeTitle.ToLower()))).ToList();
+
+			if (GetFundraiserName.ToString() == "")
+				return GetFundraiserName;
+
+			return GetFundraiserName;
 		}
 
 		public IEnumerable<Anime> GetAnime()
 		{
-			throw new NotImplementedException();
+			return _animeDbContext.Animes;
 		}
 
-		public Anime? GetAnime(int id)
+		public Anime? GetAnime(int AnimeId)
 		{
-			throw new NotImplementedException();
+			Anime? FundraiserFound = _animeDbContext.Animes.Where(p => p.Id == AnimeId).FirstOrDefault();
+			return FundraiserFound;
 		}
 
 		public void UpdateUpdate(Anime anime)
 		{
-			throw new NotImplementedException();
+			_animeDbContext.Animes.Update(anime);
+			_animeDbContext.SaveChanges();
 		}
 	}
 }
