@@ -1,0 +1,61 @@
+﻿@model LatinoHeat.Models.PokemonViewModel
+@{
+    ViewData["Title"] = "Our favorite Pokémon";
+}
+
+<div class="container my-5">
+    <h1 class="text-center text-primary">Pokemon API</h1>
+    <h2 class="text-center mb-5">These are some Pokemons we like</h2>
+
+    <div class="row justify-content-center">
+
+        <div class="col-md-4 text-center mb-4">
+            <div class="card shadow-sm p-3">
+                <h5>Andrew's Favorite Pokemon</h5>
+                @if (Model.FirstPokemon != null)
+                {
+                    <img src="@Model.FirstPokemon.ImageUrl" alt="@Model.FirstPokemon.Name" class="img-fluid mx-auto" style="max-height: 150px;" />
+                    <h3 class="text-capitalize mt-2">@Model.FirstPokemon.Name</h3>
+                    <span class="badge bg-success text-dark fs-6">Type: @Model.FirstPokemon.Type</span>
+                }
+                else
+                {
+                    <p class="text-muted">Failed to load first Pokémon.</p>
+                }
+            </div>
+        </div>
+
+        <div class="col-md-4 text-center mb-4">
+            <div class="card shadow-sm p-3">
+                <h5>Deven's Favorite Pokemon</h5>
+                @if (Model.SecondPokemon != null)
+                {
+                    <img src="@Model.SecondPokemon.ImageUrl" alt="@Model.SecondPokemon.Name" class="img-fluid mx-auto" style="max-height: 150px;" />
+                    <h3 class="text-capitalize mt-2">@Model.SecondPokemon.Name</h3>
+                    <span class="badge bg-info text-dark fs-6">Type: @Model.SecondPokemon.Type</span>
+                }
+                else
+                {
+                    <p class="text-muted">Failed to load second Pokémon.</p>
+                }
+            </div>
+        </div>
+
+        <div class="col-md-4 text-center mb-4">
+            <div class="card shadow-sm p-3 border-info">
+                <h5>And here is one that no one likes</h5>
+                @if (Model.RandomPokemon != null)
+                {
+                    <img src="@Model.RandomPokemon.ImageUrl" alt="@Model.RandomPokemon.Name" class="img-fluid mx-auto" style="max-height: 150px;" />
+                    <h3 class="text-capitalize mt-2">@Model.RandomPokemon.Name</h3>
+                    <span class="badge bg-secondary fs-6">Type: @Model.RandomPokemon.Type</span>
+                }
+                else
+                {
+                    <p class="text-muted">Failed to load random Pokémon.</p>
+                }
+            </div>
+        </div>
+
+    </div>
+</div>
