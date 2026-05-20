@@ -11,6 +11,6 @@ namespace LatinoHeat.Data
 
 		}
 
-		public DbSet<Anime> animes { get; set; }
+		public DbSet<Anime> Animes { get; set; }
 	}
 }

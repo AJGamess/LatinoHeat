@@ -1,4 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using LatinoHeat.Data;
+using LatinoHeat.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LatinoHeat.Models
 {
@@ -7,10 +12,12 @@ namespace LatinoHeat.Models
 		[Key]
 		public int Id { get; set; }
 
-		[Required]
-		public IFormFile Cover { get; set; }
+		[NotMapped]
+		public IFormFile? Cover { get; set; }
 
-		[Required]
+        public string? CoverPath { get; set; }
+
+        [Required]
 		public string Title { get; set; }
 
 		[Required]

@@ -5,9 +5,9 @@ namespace LatinoHeat.Interface
 	public interface IDataAccessLayer
 	{
 		IEnumerable<Anime> GetAnime();
-		void CreateAnime(Anime anime);
-		Anime? GetAnime(int id);
+		void CreateAnime(Anime Anime);
+		Anime? GetAnime(int AnimeId);
 		void UpdateUpdate(Anime anime);
-		IEnumerable<Anime> FilterAnime(string AnimeName);
+		IEnumerable<Anime> FilterAnime(string AnimeTitle);
 	}
 }
