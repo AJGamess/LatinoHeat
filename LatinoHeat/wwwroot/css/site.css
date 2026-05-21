@@ -1,9 +1,18 @@
+html, body {
+    min-height: 100vh;
+    margin: 0;
+}
+
 html {
     font-size: 14px;
 }
-body{
-    background-color: skyblue;
+
+body {
+    background: linear-gradient(to bottom right, #7dd3fc, #3b82f6);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
+
 @media (min-width: 768px) {
     html {
         font-size: 16px;
