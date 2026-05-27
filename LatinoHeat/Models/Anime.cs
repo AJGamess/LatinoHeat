@@ -24,10 +24,10 @@ namespace LatinoHeat.Models
 		public string Description {  get; set; }
 
 		[Required]
-		public DateOnly ReleaseDate;
+		public DateOnly ReleaseDate { get; set; }
 
 		[Required(ErrorMessage = "Please select a Genre.")]
-		public string Category { get; set; }
+		public string Genre { get; set; }
 
 		[Required]
 		public int EpisodeCount { get; set; }
