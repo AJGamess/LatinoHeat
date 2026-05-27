@@ -46,7 +46,7 @@ namespace LatinoHeat.Controllers
 
         public IActionResult Create()
         {
-            ViewBag.Genre = new List<string> { "Shonen", "Isekai", "Mecha", "Comedy", "Horror", "Fantasy", "Romance", "Shojo", "Adventure" };
+            ViewBag.Genre = new List<string> { "Shonen", "Isekai", "Mecha", "Comedy", "Horror", "Fantasy", "Romance", "Shojo", "Adventure", "Kodomo" };
             return View();
         }
 
@@ -86,7 +86,7 @@ namespace LatinoHeat.Controllers
                 return RedirectToAction("Details", new { id = anime.Id });
             }
 
-            ViewBag.Genre = new List<string> { "Shonen", "Isekai", "Mecha", "Comedy", "Horror", "Fantasy", "Romance", "Shojo", "Adventure" };
+            ViewBag.Genre = new List<string> { "Shonen", "Isekai", "Mecha", "Comedy", "Horror", "Fantasy", "Romance", "Shojo", "Adventure", "Kodomo" };
             return View(anime);
         }
 
