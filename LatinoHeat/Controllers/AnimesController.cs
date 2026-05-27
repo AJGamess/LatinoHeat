@@ -46,14 +46,14 @@ namespace LatinoHeat.Controllers
 
         public IActionResult Create()
         {
-            ViewBag.Categories = new List<string> { "Shonen", "Isekai", "Mecha", "Comedy", "Horror", "Fantasy", "Romance", "Shojo", "Adventure" };
+            ViewBag.Genre = new List<string> { "Shonen", "Isekai", "Mecha", "Comedy", "Horror", "Fantasy", "Romance", "Shojo", "Adventure" };
             return View();
         }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Cover, CoverPath,Title,Description,Category,EpisodeCount,CreatedBy,Rating")] Anime anime)
+        public async Task<IActionResult> Create([Bind("Id,Cover, CoverPath,Title,Description,Genre, ReleaseDate,EpisodeCount,CreatedBy,Rating")] Anime anime)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace LatinoHeat.Controllers
                 return RedirectToAction("Details", new { id = anime.Id });
             }
 
-            ViewBag.Categories = new List<string> { "Shonen", "Isekai", "Mecha", "Comedy", "Horror", "Fantasy", "Romance", "Shojo", "Adventure" };
+            ViewBag.Genre = new List<string> { "Shonen", "Isekai", "Mecha", "Comedy", "Horror", "Fantasy", "Romance", "Shojo", "Adventure" };
             return View(anime);
         }
 
