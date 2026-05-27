@@ -10,13 +10,13 @@ namespace LatinoHeat.Controllers
     {
         private readonly PokemonAPI _pokemonApi;
 
-        //Injecting API class via the constructor
+        // Constructor to inject the PokemonAPI class
         public PokemonController(PokemonAPI pokemonApi)
         {
             _pokemonApi = pokemonApi;
         }
 
-        // This action will handle hitting https://localhost:XXXX/Pokemon
+        // Action method to fetch and display Pokemon data
         public async Task<IActionResult> Index()
         {
             var randomId = new Random().Next(1, 1026).ToString();
