@@ -7,7 +7,7 @@ namespace LatinoHeat.Data
 	{
 		AnimeDbContext _animeDbContext;
 
-		AnimeListDAL(AnimeDbContext animeDbContext)
+		public AnimeListDAL(AnimeDbContext animeDbContext)
 		{
 			this._animeDbContext = animeDbContext;
 		}
@@ -46,10 +46,19 @@ namespace LatinoHeat.Data
 			return FundraiserFound;
 		}
 
-		public void UpdateUpdate(Anime anime)
+		public void UpdateAnime(Anime anime)
 		{
 			_animeDbContext.Animes.Update(anime);
 			_animeDbContext.SaveChanges();
 		}
-	}
+		public void DeleteAnime(Anime anime)
+		{
+			_animeDbContext.Animes.Remove(anime);
+			_animeDbContext.SaveChanges();
+        }	
+		public bool AnimeExists(int id)
+		{
+			return _animeDbContext.Animes.Any(e => e.Id == id);
+        }
+    }
 }
