@@ -7,7 +7,9 @@ namespace LatinoHeat.Interface
 		IEnumerable<Anime> GetAnime();
 		void CreateAnime(Anime Anime);
 		Anime? GetAnime(int AnimeId);
-		void UpdateUpdate(Anime anime);
+		void UpdateAnime(Anime anime);
+		void DeleteAnime(Anime anime);
+		bool AnimeExists(int id);
 		IEnumerable<Anime> FilterAnime(string AnimeTitle);
 	}
 }
