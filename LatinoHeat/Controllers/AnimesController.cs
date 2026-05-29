@@ -9,33 +9,34 @@ using LatinoHeat.Data;
 using LatinoHeat.Models;
 using Microsoft.AspNetCore.Hosting;
 using System.Security.Claims;
+using LatinoHeat.Interface;
 
 namespace LatinoHeat.Controllers
 {
     public class AnimesController : Controller
     {
-        private readonly AnimeDbContext _context;
+        //private readonly AnimeDbContext _context;
+        private readonly IDataAccessLayer _dAL;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public AnimesController(AnimeDbContext context, IWebHostEnvironment webHostEnvironment)
+        public AnimesController(IDataAccessLayer dAL, IWebHostEnvironment webHostEnvironment)
         {
-            _context = context;
+            _dAL = dAL;
             _webHostEnvironment = webHostEnvironment;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Animes.ToListAsync());
+            return View(_dAL.GetAnime());
         }
 
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var anime = await _context.Animes
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var anime = _dAL.GetAnime(id.Value);
             if (anime == null)
             {
                 return NotFound();
@@ -46,7 +47,7 @@ namespace LatinoHeat.Controllers
 
         public IActionResult Create()
         {
-            ViewBag.Genre = new List<string> { "Shonen", "Isekai", "Mecha", "Comedy", "Horror", "Fantasy", "Romance", "Shojo", "Adventure" };
+            ViewBag.Genre = new List<string> { "Shonen", "Isekai", "Mecha", "Comedy", "Horror", "Fantasy", "Romance", "Shojo", "Adventure", "Kodomo" };
             return View();
         }
 
@@ -81,34 +82,33 @@ namespace LatinoHeat.Controllers
                     anime.CoverPath = ViewBag.ImagePathAnime;
                 }
 
-                _context.Add(anime);
-                await _context.SaveChangesAsync();
+                _dAL.CreateAnime(anime);
                 return RedirectToAction("Details", new { id = anime.Id });
             }
 
-            ViewBag.Genre = new List<string> { "Shonen", "Isekai", "Mecha", "Comedy", "Horror", "Fantasy", "Romance", "Shojo", "Adventure" };
+            ViewBag.Genre = new List<string> { "Shonen", "Isekai", "Mecha", "Comedy", "Horror", "Fantasy", "Romance", "Shojo", "Adventure", "Kodomo" };
             return View(anime);
         }
 
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var anime = await _context.Animes.FindAsync(id);
+            var anime = _dAL.GetAnime(id.Value);
             if (anime == null)
             {
                 return NotFound();
             }
-            ViewBag.Genre = new List<string> { "Shonen", "Isekai", "Mecha", "Comedy", "Horror", "Fantasy", "Romance", "Shojo", "Adventure" };
+            ViewBag.Genre = new List<string> { "Shonen", "Isekai", "Mecha", "Comedy", "Horror", "Fantasy", "Romance", "Shojo", "Adventure", "Kodomo" };
             return View(anime);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CoverPath,Title,Description,Genre,EpisodeCount,CreatedBy,Rating")] Anime anime)
+        public IActionResult Edit(int id, [Bind("Id,CoverPath,Title,Description,Genre,EpisodeCount,CreatedBy,Rating")] Anime anime)
         {
             if (id != anime.Id)
             {
@@ -119,8 +119,7 @@ namespace LatinoHeat.Controllers
             {
                 try
                 {
-                    _context.Update(anime);
-                    await _context.SaveChangesAsync();
+                    _dAL.UpdateAnime(anime);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -135,19 +134,18 @@ namespace LatinoHeat.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewBag.Genre = new List<string> { "Shonen", "Isekai", "Mecha", "Comedy", "Horror", "Fantasy", "Romance", "Shojo", "Adventure" };
+            ViewBag.Genre = new List<string> { "Shonen", "Isekai", "Mecha", "Comedy", "Horror", "Fantasy", "Romance", "Shojo", "Adventure", "Kodomo" };
             return View(anime);
         }
 
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var anime = await _context.Animes
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var anime = _dAL.GetAnime(id.Value);
             if (anime == null)
             {
                 return NotFound();
@@ -159,21 +157,20 @@ namespace LatinoHeat.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
-            var anime = await _context.Animes.FindAsync(id);
+            var anime = _dAL.GetAnime(id);
             if (anime != null)
             {
-                _context.Animes.Remove(anime);
+                _dAL.DeleteAnime(anime);
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool AnimeExists(int id)
         {
-            return _context.Animes.Any(e => e.Id == id);
+            return _dAL.AnimeExists(id);
         }
     }
 }

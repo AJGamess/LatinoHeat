@@ -1,4 +1,5 @@
 using LatinoHeat.Data;
+using LatinoHeat.Interface;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,7 +12,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDbContext<AnimeDbContext>(options =>
-	options.UseSqlServer(connectionString));
+    options.UseSqlServer(connectionString));
+builder.Services.AddScoped<IDataAccessLayer, AnimeListDAL>();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
