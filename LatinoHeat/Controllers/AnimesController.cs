@@ -54,7 +54,7 @@ namespace LatinoHeat.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Cover, CoverPath,Title,Description,Genre, ReleaseDate,EpisodeCount,CreatedBy,Rating")] Anime anime)
+        public async Task<IActionResult> Create([Bind("Id,Cover, CoverPath,Title,Description,Genre,ReleaseDate,EpisodeCount,CreatedBy,Rating")] Anime anime)
         {
             if (ModelState.IsValid)
             {
@@ -108,7 +108,7 @@ namespace LatinoHeat.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("Id,CoverPath,Title,Description,Genre,EpisodeCount,CreatedBy,Rating")] Anime anime)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Cover, CoverPath,Title,Description,Genre, ReleaseDate,EpisodeCount,CreatedBy,Rating")] Anime anime)
         {
             if (id != anime.Id)
             {
@@ -117,6 +117,30 @@ namespace LatinoHeat.Controllers
 
             if (ModelState.IsValid)
             {
+                if (anime.Cover != null)
+                {
+                    if (anime.Cover.ContentType != "image/jpeg" && anime.Cover.ContentType != "image/png")
+                    {
+                        ModelState.AddModelError("Cover", "PNG and JPEGS ALLOWED ONLY");
+                    }
+                    string uploadFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
+
+                    if (!Directory.Exists(uploadFolder))
+                    {
+                        Directory.CreateDirectory(uploadFolder);
+                    }
+
+                    string fileName = Path.GetFileName(anime.Cover.FileName);
+                    string fileSavePath = Path.Combine(uploadFolder, fileName);
+
+                    using (FileStream stream = new FileStream(fileSavePath, FileMode.Create))
+                    {
+                        await anime.Cover.CopyToAsync(stream);
+                    }
+                    ViewBag.ImagePathAnime = "/uploads/" + fileName;
+                    anime.CoverPath = ViewBag.ImagePathAnime;
+                }
+
                 try
                 {
                     _dAL.UpdateAnime(anime);
