@@ -29,6 +29,11 @@ namespace LatinoHeat.Controllers
             return View(_dAL.GetAnime());
         }
 
+        public IActionResult Browse()
+        {
+            return View(_dAL.GetAnime());
+        }
+
         public IActionResult Details(int? id)
         {
             if (id == null)
