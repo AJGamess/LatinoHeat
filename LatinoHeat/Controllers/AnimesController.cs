@@ -81,7 +81,7 @@ namespace LatinoHeat.Controllers
                     ViewBag.ImagePathAnime = "/uploads/" + fileName;
                     anime.CoverPath = ViewBag.ImagePathAnime;
                 }
-
+                anime.CreatedBy = User.Identity.Name;
                 _dAL.CreateAnime(anime);
                 return RedirectToAction("Details", new { id = anime.Id });
             }

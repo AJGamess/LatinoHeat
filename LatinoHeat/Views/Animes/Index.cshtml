@@ -1,51 +1,65 @@
-﻿@model IEnumerable<LatinoHeat.Models.Anime>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@model IEnumerable<LatinoHeat.Models.Anime>
+
 
 @{
     ViewData["Title"] = "Index";
 }
-
-<div class="container-fluid min-vh-100 py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Animes</h1>
-        <a asp-action="Create" class="btn btn-success">Create New</a>
-    </div>
-
+    @if(SignInManager.IsSignedIn(User))
+    {
+    <div class="container-fluid min-vh-100 py-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Animes</h1>
+            <a asp-action="Create" class="btn btn-success">Create New</a>
+        </div>
     <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-4">
         @foreach (var item in Model)
         {
-            <div class="col">
-                <a asp-action="Details" asp-route-id="@item.Id" class="text-decoration-none text-white h-100 d-block anime-card-link">
-                    <div class="card h-100 bg-transparent border-0">
+                if(item.CreatedBy == User.Identity.Name)
+                {
+                    <div class="col">
+                        <a asp-action="Details" asp-route-id="@item.Id" class="text-decoration-none text-white h-100 d-block anime-card-link">
+                            <div class="card h-100 bg-transparent border-0">
 
-                        <div class="position-relative overflow-hidden rounded mb-2 image-container">
-                            @if (!string.IsNullOrEmpty(item.CoverPath))
-                            {
-                                <img src="@Url.Content(item.CoverPath)" class="card-img-top rounded anime-poster" alt="@item.Title Poster" />
-                            }
-                            else
-                            {
-                                <div class="bg-secondary d-flex align-items-center justify-content-center text-muted rounded anime-poster">
-                                    <span>No Image</span>
+                                <div class="position-relative overflow-hidden rounded mb-2 image-container">
+                                    @if (!string.IsNullOrEmpty(item.CoverPath))
+                                    {
+                                        <img src="@Url.Content(item.CoverPath)" class="card-img-top rounded anime-poster" alt="@item.Title Poster" />
+                                    }
+                                    else
+                                    {
+                                        <div class="bg-secondary d-flex align-items-center justify-content-center text-muted rounded anime-poster">
+                                            <span>No Image</span>
+                                        </div>
+                                    }
                                 </div>
-                            }
-                        </div>
 
-                        <div class="card-body p-0">
-                            <h6 class="card-title text-truncate mb-1 fw-bold text-body" title="@item.Title">
-                                @item.Title
-                            </h6>
-                            <p class="card-text small text-muted mb-2">
-                                @item.Genre • Rating: @item.Rating/10
-                            </p>
+                                <div class="card-body p-0">
+                                    <h6 class="card-title text-truncate mb-1 fw-bold text-body" title="@item.Title">
+                                        @item.Title
+                                    </h6>
+                                    <p class="card-text small text-muted mb-2">
+                                        @item.Genre • Rating: @item.Rating/10
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                        <div class="mt-2 d-flex gap-1 justify-content-between">
+                            @if(item.CreatedBy == User.Identity.Name)
+                            {
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm py-0 px-2 flex-grow-1">Edit</a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm py-0 px-2 flex-grow-1">Delete</a>
+
+                            }
                         </div>
                     </div>
-                </a>
-
-                <div class="mt-2 d-flex gap-1 justify-content-between">
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm py-0 px-2 flex-grow-1">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm py-0 px-2 flex-grow-1">Delete</a>
-                </div>
-            </div>
+                }
         }
     </div>
 </div>
+    } else 
+    {
+        <h1>Log in to view anime</h1>
+    }
