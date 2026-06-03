@@ -1,4 +1,4 @@
-﻿@model IEnumerable<LatinoHeat.Models.Anime>
+﻿@model IEnumerable<LatinoHeat.Models.AnimeBrowseViewModel>
 
 
 @{
@@ -9,17 +9,24 @@
             <h1>Animes</h1>
             <a asp-action="Create" class="btn btn-success">Create New</a>
         </div>
+    <form asp-action="Browse" method="get" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="searchString" value="@ViewData["CurrentFilter"]"
+                   class="form-control" placeholder="Search by title..." />
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
         <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-4">
             @foreach (var item in Model)
             {
                     <div class="col">
-                        <a asp-action="Details" asp-route-id="@item.Id" class="text-decoration-none text-white h-100 d-block anime-card-link">
-                            <div class="card h-100 bg-transparent border-0">
+                        <a asp-action="Details" asp-route-id="@item.Anime.Id" class="text-decoration-none text-white d-block anime-card-link">
+                            <div class="card bg-transparent border-0">
 
                                 <div class="position-relative overflow-hidden rounded mb-2 image-container">
-                                    @if (!string.IsNullOrEmpty(item.CoverPath))
+                                    @if (!string.IsNullOrEmpty(item.Anime.CoverPath))
                                     {
-                                        <img src="@Url.Content(item.CoverPath)" class="card-img-top rounded anime-poster" alt="@item.Title Poster" />
+                                        <img src="@Url.Content(item.Anime.CoverPath)" class="card-img-top rounded anime-poster" alt="@item.Anime.Title Poster" />
                                     }
                                     else
                                     {
@@ -30,20 +37,43 @@
                                 </div>
 
                                 <div class="card-body p-0">
-                                    <h6 class="card-title text-truncate mb-1 fw-bold text-body" title="@item.Title">
-                                        @item.Title
+                                    <h6 class="card-title text-truncate mb-1 fw-bold text-body" title="@item.Anime.Title">
+                                        @item.Anime.Title
                                     </h6>
                                     <p class="card-text small text-muted mb-2">
-                                        @item.Genre • Rating: @item.Rating/10
+                                        @item.Anime.Genre • Rating: @item.Anime.Rating/10
                                     </p>
                                 </div>
                             </div>
                         </a>
-                        <div class="mt-2 d-flex gap-1 justify-content-between">
-                            @if (item.CreatedBy == User.Identity.Name)
+
+                        <div class="mt-2 d-flex gap-1 justify-content-center align-items-center">
+                            @if (User.Identity.IsAuthenticated)
                             {
-                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm py-0 px-2 flex-grow-1">Edit</a>
-                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm py-0 px-2 flex-grow-1">Delete</a>
+                                <form asp-action="Like" asp-route-id="@item.Anime.Id" method="post" class="flex-grow-1 mb-0">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm py-0 px-2 w-100 @(item.UserLiked == true ? "btn-success" : "btn-outline-success")">
+                                        👍 @item.TotalLikes
+                                    </button>
+                                </form>
+                                <form asp-action="Dislike" asp-route-id="@item.Anime.Id" method="post" class="flex-grow-1 mb-0">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm py-0 px-2 w-100 @(item.UserLiked == false ? "btn-danger" : "btn-outline-danger")">
+                                        👎 @item.TotalDislikes
+                                    </button>
+                                </form>
+                            }
+                            else
+                            {
+                                <span class="small text-muted">👍 @item.TotalLikes &nbsp; 👎 @item.TotalDislikes</span>
+                            }
+                        </div>
+
+                        <div class="mt-2 d-flex gap-1 justify-content-between">
+                            @if (item.Anime.CreatedBy == User.Identity.Name)
+                            {
+                                <a asp-action="Edit" asp-route-id="@item.Anime.Id" class="btn btn-warning btn-sm py-0 px-2 flex-grow-1">Edit</a>
+                                <a asp-action="Delete" asp-route-id="@item.Anime.Id" class="btn btn-danger btn-sm py-0 px-2 flex-grow-1">Delete</a>
 
                             }
                         </div>
