@@ -1,21 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using LatinoHeat.Data;
+using Microsoft.AspNetCore.Authorization;
 using LatinoHeat.Models;
-using Microsoft.AspNetCore.Hosting;
-using System.Security.Claims;
 using LatinoHeat.Interface;
 
 namespace LatinoHeat.Controllers
 {
     public class AnimesController : Controller
     {
-        //private readonly AnimeDbContext _context;
         private readonly IDataAccessLayer _dAL;
         private readonly IWebHostEnvironment _webHostEnvironment;
         public AnimesController(IDataAccessLayer dAL, IWebHostEnvironment webHostEnvironment)
@@ -29,9 +21,28 @@ namespace LatinoHeat.Controllers
             return View(_dAL.GetAnime());
         }
 
-        public IActionResult Browse()
+        public IActionResult Browse(string searchString)
         {
-            return View(_dAL.GetAnime());
+            ViewData["CurrentFilter"] = searchString;
+            return View(_dAL.GetAnimeWithReactions(User.Identity.Name, searchString));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public IActionResult Like(int id)
+        {
+            _dAL.ToggleReaction(id, User.Identity.Name, true);
+            return RedirectToAction(nameof(Browse));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public IActionResult Dislike(int id)
+        {
+            _dAL.ToggleReaction(id, User.Identity.Name, false);
+            return RedirectToAction(nameof(Browse));
         }
 
         public IActionResult Details(int? id)
@@ -152,7 +163,7 @@ namespace LatinoHeat.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AnimeExists(anime.Id))
+                    if (!_dAL.AnimeExists(anime.Id))
                     {
                         return NotFound();
                     }
@@ -195,11 +206,6 @@ namespace LatinoHeat.Controllers
             }
 
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool AnimeExists(int id)
-        {
-            return _dAL.AnimeExists(id);
         }
     }
 }

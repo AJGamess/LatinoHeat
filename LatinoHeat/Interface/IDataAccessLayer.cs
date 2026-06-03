@@ -10,6 +10,9 @@ namespace LatinoHeat.Interface
 		void UpdateAnime(Anime anime);
 		void DeleteAnime(Anime anime);
 		bool AnimeExists(int id);
-		IEnumerable<Anime> FilterAnime(string AnimeTitle);
-	}
+		IEnumerable<Anime> FilterAnime(string? AnimeTitle);
+		void ToggleReaction(int animeId, string userId, bool isLike);
+		IEnumerable<AnimeBrowseViewModel> GetAnimeWithReactions(string? currentUserId, string? searchString = null);
+
+    }
 }
